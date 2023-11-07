@@ -1,1 +1,1 @@
-# nb-herald-interface
+# nb-map-interface
