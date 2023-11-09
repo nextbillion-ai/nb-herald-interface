@@ -37,7 +37,7 @@ type PubsubMetadata struct {
 type OptimizationStore struct {
 	StartTime   int64
 	Description *string
-	VRoomResult []byte
+	HeraldResult []byte
 	Error       string
 	Key         string
 	IsEndState  bool
@@ -46,7 +46,7 @@ type OptimizationStore struct {
 // swagger:ignore
 
 
-type VRoomStep struct { // will change to herald
+type HeraldStep struct { // will change to herald
 	Type          *string     `json:"type,omitempty"`                            // Describe the task type of this step
 	Arrival       *float64    `json:"arrival,omitempty"`                         // Describe the arrival time at this step
 	Duration      *float64    `json:"duration,omitempty"`                        // Describe the duration to this step. (The duration is accumulated here which means it includes the time spent on previous steps)
@@ -62,10 +62,10 @@ type VRoomStep struct { // will change to herald
 	Distance      *uint64     `json:"distance,omitempty"`
 }
 
-type VRoomRoute struct { // will change to herald
+type HeraldRoute struct { // will change to herald
 	Vehicle     *uint64     `json:"vehicle"`                // Describe the id of assigned vehicle
 	Cost        uint64      `json:"cost"`                   // Describe the cost of this route. Right now it is equal to duration
-	Steps       []VRoomStep `json:"steps"`                  // Describe the steps in this route
+	Steps       []HeraldStep `json:"steps"`                  // Describe the steps in this route
 	Setup       *uint64     `json:"setup,omitempty"`        // Describe the total setup time for this route
 	Service     *uint64     `json:"service,omitempty"`      // Describe the total service time for this route
 	Duration    *uint64     `json:"duration"`               // Describe the duration of this route
@@ -79,12 +79,12 @@ type VRoomRoute struct { // will change to herald
 	Description *string     `json:"description,omitempty"` // The description for the assigned vehicle
 }
 
-type VRoomResult struct { // will change to herald
+type HeraldResult struct { // will change to herald
 	Code       *uint8       `json:"code,omitempty"`       // 0: no error, 1: internal error, 2: input error, 3: routing error
 	Error      *string      `json:"error,omitempty"`      // Describe the error when there is
 	Summary    *Summary     `json:"summary"`              // Summarize the solution
 	Unassigned []Unassigned `json:"unassigned,omitempty"` // Describe the unassigned tasks
-	Routes     []VRoomRoute `json:"routes"`               // Describe the optimization routes
+	Routes     []HeraldRoute `json:"routes"`               // Describe the optimization routes
 }
 
 type OptimizationPostInput struct {
@@ -178,7 +178,7 @@ type OptimizationGetInput struct {
 
 type OptimizationGetOutput struct {
 	Description string      `json:"description,omitempty"`      // It will be returned when it is given in optimization POST locations’ description.
-	Result      VRoomResult `json:"result" binding:"required"`  // Describe the optimization routing result
+	Result      HeraldResult `json:"result" binding:"required"`  // Describe the optimization routing result
 	Status      string      `json:"status" binding:"required"`  // Describe the error happens during processing data
 	Message     string      `json:"message" binding:"required"` // Describe process status
 }
@@ -192,9 +192,9 @@ type SimpleErrorResp struct {
 
 
 type VehicleRoutingMsg struct {
-	Jobs      []VRoomJob          `json:"jobs"`
-	Shipments []VRoomShipment     `json:"shipments,omitempty"`
-	Vehicles  []VRoomVehicle      `json:"vehicles" binding:"required"`
+	Jobs      []HeraldJob          `json:"jobs"`
+	Shipments []HeraldShipment     `json:"shipments,omitempty"`
+	Vehicles  []HeraldVehicle      `json:"vehicles" binding:"required"`
 	Matrices  map[string]Matrix   `json:"matrices" binding:"required"`
 	Depots    []Depot             `json:"depots,omitempty"`
 	Options   OptimizationOptions `json:"options"`
@@ -204,15 +204,15 @@ type Matrix struct {
 	Costs     [][]uint64 `json:"costs,omitempty"`
 }
 
-type VRoomShipment struct { // will change to Herald
-	Pickup   *VRoomShipmentStep `json:"pickup,omitempty"`
-	Delivery *VRoomShipmentStep `json:"delivery,omitempty"`
+type HeraldShipment struct { // will change to Herald
+	Pickup   *HeraldShipmentStep `json:"pickup,omitempty"`
+	Delivery *HeraldShipmentStep `json:"delivery,omitempty"`
 	Amount   []uint64           `json:"amount,omitempty"`
 	Skills   []uint64           `json:"skills,omitempty"`
 	Priority *uint64            `json:"priority,omitempty"`
 }
 
-type VRoomShipmentStep struct { // Will change to Herald
+type HeraldShipmentStep struct { // Will change to Herald
 	Id            uint64     `json:"id" binding:"required"`
 	Description   string     `json:"description,omitempty"`
 	Location      []float64  `json:"location"`
@@ -222,7 +222,7 @@ type VRoomShipmentStep struct { // Will change to Herald
 	TimeWindows   [][]uint64 `json:"time_windows,omitempty"`
 }
 
-type VRoomJob struct {
+type HeraldJob struct {
 	Id            uint64     `json:"id" binding:"required"`
 	Description   string     `json:"description,omitempty"`
 	Location      []float64  `json:"location" binding:"required"`
@@ -236,7 +236,7 @@ type VRoomJob struct {
 	TimeWindows   [][]uint64 `json:"time_windows,omitempty"`
 }
 
-type VRoomVehicle struct { // will change to herald
+type HeraldVehicle struct { // will change to herald
 	Id          uint64         `json:"id" binding:"required"`
 	Profile     VehicleProfile `json:"profile" binding:"required"`
 	Description string         `json:"description,omitempty"`
