@@ -14,25 +14,6 @@ import (
 	"time"
 )
 
-// Optimization 
-type PubsubSchema struct {
-	APIKey    string         `json:"api_key"`
-	Endpoint  string         `json:"endpoint"`
-	TimeStamp uint64         `json:"timestamp"`
-	Metadata  PubsubMetadata `json:"metadata"`
-	OrgId     string         `json:"org_id"`
-	Namespace string         `json:"k8s_namespace"`
-	Cluster   string         `json:"cluster"`
-	Sku       string         `json:"sku"`
-}
-
-
-// Optimization
-type PubsubMetadata struct {
-	LocationHashes []string `json:"location_hashes"`
-}
-
-
 // Optimization
 type OptimizationStore struct {
 	StartTime   int64
