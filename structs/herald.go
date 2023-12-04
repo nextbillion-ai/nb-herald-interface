@@ -4,14 +4,10 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
-	"herald/config"
-	"herald/storage/remote"
 	"io"
-	"reflect"
 	"strconv"
-	"strings"
 	"time"
+	"github.com/nextbillion-ai/nb-optimization-interface/utils"
 )
 
 // Optimization
@@ -116,7 +112,7 @@ func (input *OptimizationPostInput) GenJobID(apikey string, jobIDPrefix string) 
 	hash := h.Sum(nil)
 	id := hex.EncodeToString(hash[:])
 	isErrorJob := ifErrorJob(id)
-	if isErrorJob || !config.Conf.CacheId {
+	if isErrorJob || !utils.Conf.CacheId {
 		// allow user to recreate error job instead of returning the same ID
 		io.WriteString(h, strconv.FormatInt(time.Now().UnixMilli(), 10))
 		hash = h.Sum(nil)
@@ -126,7 +122,7 @@ func (input *OptimizationPostInput) GenJobID(apikey string, jobIDPrefix string) 
 }
 
 func ifErrorJob(id string) bool {
-	result, err := remote.Client.Get("Optimization_" + id)
+	result, err := utils.Client.Get("Optimization_" + id)
 	if err != nil {
 		return false
 	}

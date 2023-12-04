@@ -1,7 +1,8 @@
 package main
 
-import (
-	"nb-optimization-interface/structs"
-	"nb-optimization-interface/validations"
-)
+// import (
+// 	"github.com/nextbillion-ai/nb-optimization-interface/validations"
+// 	"github.com/nextbillion-ai/nb-optimization-interface/utils"
+// 	"github.com/nextbillion-ai/nb-optimization-interface/structs"
+// )
 	

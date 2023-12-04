@@ -1,39 +1,49 @@
-func (input *OptimizationPostInput) GenJobID(apikey string, jobIDPrefix string) (string, error) {
-	inputByte, err := json.Marshal(input)
-	if err != nil {
-		return "", err
-	}
-	h := md5.New()
-	io.WriteString(h, string(inputByte))
-	io.WriteString(h, apikey)
-	hash := h.Sum(nil)
-	id := hex.EncodeToString(hash[:])
-	isErrorJob := ifErrorJob(id)
-	if isErrorJob || !config.Conf.CacheId {
-		// allow user to recreate error job instead of returning the same ID
-		io.WriteString(h, strconv.FormatInt(time.Now().UnixMilli(), 10))
-		hash = h.Sum(nil)
-		id = hex.EncodeToString(hash[:])
-	}
-	return jobIDPrefix + id, nil
-}
+package validations
+
+import (
+	"fmt"
+	// "encoding/json"
+	"strings"
+	structs "github.com/nextbillion-ai/nb-optimization-interface/structs"
+
+)
+
+// func (input *structs.OptimizationPostInput) GenJobID(apikey string, jobIDPrefix string) (string, error) {
+// 	inputByte, err := json.Marshal(input)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	h := md5.New()
+// 	io.WriteString(h, string(inputByte))
+// 	io.WriteString(h, apikey)
+// 	hash := h.Sum(nil)
+// 	id := hex.EncodeToString(hash[:])
+// 	isErrorJob := ifErrorJob(id)
+// 	if isErrorJob || !config.Conf.CacheId {
+// 		// allow user to recreate error job instead of returning the same ID
+// 		io.WriteString(h, strconv.FormatInt(time.Now().UnixMilli(), 10))
+// 		hash = h.Sum(nil)
+// 		id = hex.EncodeToString(hash[:])
+// 	}
+// 	return jobIDPrefix + id, nil
+// }
 
 
-func ifErrorJob(id string) bool {
-	result, err := remote.Client.Get("Optimization_" + id)
-	if err != nil {
-		return false
-	}
-	var content OptimizationStore
-	err = json.Unmarshal([]byte(result), &content)
-	if err != nil {
-		return false
-	}
-	if len(content.Error) > 0 {
-		return true
-	}
-	return false
-}
+// func ifErrorJob(id string) bool {
+// 	result, err := remote.Client.Get("Optimization_" + id)
+// 	if err != nil {
+// 		return false
+// 	}
+// 	var content structs.OptimizationStore
+// 	err = json.Unmarshal([]byte(result), &content)
+// 	if err != nil {
+// 		return false
+// 	}
+// 	if len(content.Error) > 0 {
+// 		return true
+// 	}
+// 	return false
+// }
 
 
 func validateTimeWindows(timeWindows [][]uint64) (bool, error) {
@@ -67,7 +77,7 @@ func validateTimeWindows(timeWindows [][]uint64) (bool, error) {
 }
 
 
-func validateOptions(input *dto.OptimizationPostInput) (dto.OptimizationOptions, []string, error) {
+func validateOptions(input *structs.OptimizationPostInput) (structs.OptimizationOptions, []string, error) {
 	var warnings []string
 
 	options := input.Options
@@ -128,7 +138,7 @@ func validateCostMatrix(length int, matrix [][]uint64) error {
 }
 
 
-func validateApproaches(locations dto.Locations) error {
+func validateApproaches(locations structs.Locations) error {
 	location := locations.Location
 	length := len(strings.Split(location, "|"))
 	if len(locations.Approaches) > 0 {

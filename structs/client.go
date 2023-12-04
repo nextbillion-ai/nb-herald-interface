@@ -1,17 +1,9 @@
 package structs
 
 import (
-	"crypto/md5"
-	"encoding/hex"
-	"encoding/json"
 	"fmt"
-	"herald/config"
-	"herald/storage/remote"
-	"io"
 	"reflect"
-	"strconv"
 	"strings"
-	"time"
 )
 
 type Locations struct {
